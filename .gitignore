@@ -1,0 +1,56 @@
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# Build
+backend/target/
+frontend/node_modules/
+frontend/dist/
+
+# Logs
+backend/logs/
+*.log
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Environment & Secrets
+backend/src/main/resources/application-prod.yml
+.mcp.json
+
+# Python cache
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Trae/Claude IDE
+.claude/
+.trae/
+
+# Uploads (user-generated content)
+uploads/
+
+# Temp files
+temp_pdf/
+docs/thesis/pip_libs/
+docs/thesis/pw_browsers/
+docs/thesis/ppt_workspace/
+
+# Mock data scripts output
+mock_images/
+
+# Node
+node_modules/
+
+# Compiled class files
+*.class
+
+# Package files
+*.jar
+*.war
+
+# JMeter
+docs/JMeter_FlashSale_100.jmx
+docs/jmeter_tokens.csv

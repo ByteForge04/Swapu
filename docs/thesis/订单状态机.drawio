@@ -1,0 +1,132 @@
+<mxfile host="app.diagrams.net" version="21.0">
+  <diagram name="订单状态机" id="order-state">
+    <mxGraphModel dx="1100" dy="700" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="700" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- 起始 -->
+        <mxCell id="start" value="买家下单" style="ellipse;whiteSpace=wrap;html=1;fontSize=12;fontStyle=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="30" y="255" width="100" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- 待确认 -->
+        <mxCell id="s0" value="待确认&#xa;(status=0)" style="rounded=1;whiteSpace=wrap;html=1;fontSize=13;fontStyle=1;fillColor=#fff2cc;strokeColor=#d6b656;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="180" y="250" width="140" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- 进行中 -->
+        <mxCell id="s1" value="进行中&#xa;(status=1)" style="rounded=1;whiteSpace=wrap;html=1;fontSize=13;fontStyle=1;fillColor=#dae8fc;strokeColor=#6c8ebf;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="530" y="250" width="140" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- 已完成 -->
+        <mxCell id="s2" value="已完成&#xa;(status=2)" style="rounded=1;whiteSpace=wrap;html=1;fontSize=13;fontStyle=1;fillColor=#d5e8d4;strokeColor=#82b366;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="830" y="250" width="140" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- 已取消 -->
+        <mxCell id="s3" value="已取消&#xa;(status=3)" style="rounded=1;whiteSpace=wrap;html=1;fontSize=13;fontStyle=1;fillColor=#f8cecc;strokeColor=#b85450;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="530" y="530" width="140" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- 终止 -->
+        <mxCell id="end1r" value="流程结束" style="ellipse;whiteSpace=wrap;html=1;fontSize=12;fontStyle=1;fillColor=#f5f5f5;strokeColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="855" y="530" width="100" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- ===== 转换 ===== -->
+
+        <!-- start → 待确认 -->
+        <mxCell id="t0" value="买家创建订单&#xa;商品→交易中" style="endArrow=block;endFill=1;html=1;strokeWidth=1.5;fontSize=11;align=left;verticalAlign=bottom;" edge="1" parent="1" source="start" target="s0">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- 待确认 → 进行中 (线上支付) -->
+        <mxCell id="t1a" value="线上：买家支付成功&#xa;paySuccess → status=1" style="endArrow=block;endFill=1;html=1;strokeWidth=1.5;fontSize=11;align=left;verticalAlign=bottom;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0;entryY=0.25;entryDx=0;entryDy=0;" edge="1" parent="1" source="s0" target="s1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- 待确认 → 进行中 (线下交易) -->
+        <mxCell id="t1b" value="线下：卖家确认接单&#xa;confirmOrder → status=1" style="endArrow=block;endFill=1;html=1;strokeWidth=1.5;fontSize=11;align=left;verticalAlign=bottom;exitX=1;exitY=0.75;exitDx=0;exitDy=0;entryX=0;entryY=0.75;entryDx=0;entryDy=0;" edge="1" parent="1" source="s0" target="s1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- 待确认 → 已取消 (超时) -->
+        <mxCell id="t2a" value="30min超时未支付&#xa;OrderTimeoutListener取消" style="endArrow=block;endFill=1;html=1;strokeWidth=1.5;fontSize=11;align=left;verticalAlign=bottom;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="s0" target="s3">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="250" y="565" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- 待确认 → 已取消 (主动取消) -->
+        <mxCell id="t2b" value="买家/卖家主动取消" style="endArrow=block;endFill=1;html=1;strokeWidth=1.5;fontSize=11;align=left;verticalAlign=bottom;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.25;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="s0" target="s3">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="250" y="420" />
+              <mxPoint x="565" y="420" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- 进行中 → 已完成 -->
+        <mxCell id="t3" value="买家确认收货&#xa;商品→已售出" style="endArrow=block;endFill=1;html=1;strokeWidth=1.5;fontSize=11;align=left;verticalAlign=bottom;" edge="1" parent="1" source="s1" target="s2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- 进行中 → 已取消 -->
+        <mxCell id="t4" value="任一方取消订单&#xa;商品→回滚在售" style="endArrow=block;endFill=1;html=1;strokeWidth=1.5;fontSize=11;align=left;verticalAlign=bottom;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="s1" target="s3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- 已完成 → 终止 -->
+        <mxCell id="t5" style="endArrow=block;endFill=1;html=1;strokeWidth=1.5;" edge="1" parent="1" source="s2" target="end1r">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="905" y="400" />
+              <mxPoint x="905" y="530" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- 已取消 → 终止 -->
+        <mxCell id="t6" style="endArrow=block;endFill=1;html=1;strokeWidth=1.5;" edge="1" parent="1" source="s3" target="end1r">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ===== 注释 ===== -->
+
+        <mxCell id="n0" value="分布式锁保护&#xa;payment_status=0" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;size=15;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;align=left;spacingLeft=5;" vertex="1" parent="1">
+          <mxGeometry x="155" y="140" width="130" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="n0l" style="endArrow=none;dashed=1;html=1;strokeColor=#d6b656;" edge="1" parent="1" source="n0" target="s0">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="n1" value="线上：payment_status=1&#xa;线下：payment_status=1" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;size=15;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;align=left;spacingLeft=5;" vertex="1" parent="1">
+          <mxGeometry x="490" y="140" width="160" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="n1l" style="endArrow=none;dashed=1;html=1;strokeColor=#6c8ebf;" edge="1" parent="1" source="n1" target="s1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="n2" value="可进行评价" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;size=15;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;align=left;spacingLeft=5;" vertex="1" parent="1">
+          <mxGeometry x="830" y="140" width="100" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="n2l" style="endArrow=none;dashed=1;html=1;strokeColor=#82b366;" edge="1" parent="1" source="n2" target="s2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="n3" value="商品释放回在售" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;size=15;fillColor=#f8cecc;strokeColor=#b85450;fontSize=10;align=left;spacingLeft=5;" vertex="1" parent="1">
+          <mxGeometry x="720" y="545" width="110" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="n3l" style="endArrow=none;dashed=1;html=1;strokeColor=#b85450;" edge="1" parent="1" source="n3" target="s3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

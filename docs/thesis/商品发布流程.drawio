@@ -1,0 +1,104 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="商品发布流程" id="publish-flow">
+    <mxGraphModel dx="1560" dy="855" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="2000" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="A" parent="1" style="ellipse;whiteSpace=wrap;html=1;fontSize=12;" value="卖家登录并填写商品信息" vertex="1">
+          <mxGeometry height="50" width="200" x="150" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="B" parent="1" style="rhombus;whiteSpace=wrap;html=1;fontSize=12;" value="是否使用AI润色" vertex="1">
+          <mxGeometry height="80" width="160" x="170" y="130" as="geometry" />
+        </mxCell>
+        <mxCell id="C" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;" value="调用 ai polish&#xa;接口生成文案" vertex="1">
+          <mxGeometry height="50" width="160" x="420" y="145" as="geometry" />
+        </mxCell>
+        <mxCell id="D" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;" value="手动完成描述" vertex="1">
+          <mxGeometry height="50" width="200" x="150" y="270" as="geometry" />
+        </mxCell>
+        <mxCell id="E" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;" value="提交发布" vertex="1">
+          <mxGeometry height="50" width="200" x="150" y="380" as="geometry" />
+        </mxCell>
+        <mxCell id="F" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;" value="&amp;nbsp;内容审核" vertex="1">
+          <mxGeometry height="50" width="200" x="150" y="490" as="geometry" />
+        </mxCell>
+        <mxCell id="G" parent="1" style="rhombus;whiteSpace=wrap;html=1;fontSize=12;" value="审核是否通过" vertex="1">
+          <mxGeometry height="80" width="160" x="170" y="600" as="geometry" />
+        </mxCell>
+        <mxCell id="H" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;" value="保存商品 状态为在售" vertex="1">
+          <mxGeometry height="50" width="200" x="150" y="740" as="geometry" />
+        </mxCell>
+        <mxCell id="I" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;" value="保存商品 状态为已下架" vertex="1">
+          <mxGeometry height="50" width="160" x="420" y="615" as="geometry" />
+        </mxCell>
+        <mxCell id="J" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;" value="发送 ItemSyncMessage&#xa;到 RocketMQ" vertex="1">
+          <mxGeometry height="50" width="200" x="150" y="850" as="geometry" />
+        </mxCell>
+        <mxCell id="K" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;" value="ItemSyncListener 消费消息" vertex="1">
+          <mxGeometry height="50" width="200" x="150" y="960" as="geometry" />
+        </mxCell>
+        <mxCell id="L" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;" value="doSyncToEs 同步至&#xa;ES 和 PgVector" vertex="1">
+          <mxGeometry height="50" width="200" x="150" y="1070" as="geometry" />
+        </mxCell>
+        <mxCell id="M" parent="1" style="ellipse;whiteSpace=wrap;html=1;fontSize=12;" value="发布成功/失败" vertex="1">
+          <mxGeometry height="50" width="200" x="150" y="1180" as="geometry" />
+        </mxCell>
+        <mxCell id="eAB" edge="1" parent="1" source="A" style="endArrow=block;endFill=1;html=1;strokeWidth=1.5;" target="B">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="eBC" edge="1" parent="1" source="B" style="endArrow=block;endFill=1;html=1;strokeWidth=1.5;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="C">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lBC" parent="1" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=12;" value="是" vertex="1">
+          <mxGeometry height="20" width="30" x="345" y="155" as="geometry" />
+        </mxCell>
+        <mxCell id="eBD" edge="1" parent="1" source="B" style="endArrow=block;endFill=1;html=1;strokeWidth=1.5;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="D">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lBD" parent="1" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=12;" value="否" vertex="1">
+          <mxGeometry height="20" width="30" x="255" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="eCD" edge="1" parent="1" source="C" style="endArrow=block;endFill=1;html=1;strokeWidth=1.5;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="D">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="500" y="295" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eDE" edge="1" parent="1" source="D" style="endArrow=block;endFill=1;html=1;strokeWidth=1.5;" target="E">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="eEF" edge="1" parent="1" source="E" style="endArrow=block;endFill=1;html=1;strokeWidth=1.5;" target="F">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="eFG" edge="1" parent="1" source="F" style="endArrow=block;endFill=1;html=1;strokeWidth=1.5;" target="G">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="eGH" edge="1" parent="1" source="G" style="endArrow=block;endFill=1;html=1;strokeWidth=1.5;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="H">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lGH" parent="1" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=12;" value="通过" vertex="1">
+          <mxGeometry height="20" width="40" x="255" y="690" as="geometry" />
+        </mxCell>
+        <mxCell id="eGI" edge="1" parent="1" source="G" style="endArrow=block;endFill=1;html=1;strokeWidth=1.5;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="I">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lGI" parent="1" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=12;" value="违规" vertex="1">
+          <mxGeometry height="20" width="40" x="345" y="625" as="geometry" />
+        </mxCell>
+        <mxCell id="eHJ" edge="1" parent="1" source="H" style="endArrow=block;endFill=1;html=1;strokeWidth=1.5;" target="J">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="eJK" edge="1" parent="1" source="J" style="endArrow=block;endFill=1;html=1;strokeWidth=1.5;" target="K">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="eKL" edge="1" parent="1" source="K" style="endArrow=block;endFill=1;html=1;strokeWidth=1.5;" target="L">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="eLM" edge="1" parent="1" source="L" style="endArrow=block;endFill=1;html=1;strokeWidth=1.5;" target="M">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

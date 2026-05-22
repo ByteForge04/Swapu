@@ -1,0 +1,76 @@
+:root {
+  font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', '微软雅黑', Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  /* 闲鱼风格配色 */
+  --xy-primary: #ffda44;       /* 闲鱼黄 */
+  --xy-primary-hover: #e6c43d;
+  --xy-bg: #f6f7f9;            /* 浅灰背景 */
+  --xy-text-main: #333333;     /* 主要文字 */
+  --xy-text-secondary: #999999;/* 次要文字 */
+  --xy-border: #eeeeee;
+
+  /* 覆盖 Element Plus 主题色 */
+  --el-color-primary: var(--xy-primary);
+  --el-color-primary-light-3: #ffe47a;
+  --el-color-primary-light-5: #ffed9c;
+  --el-color-primary-light-7: #fff5be;
+  --el-color-primary-light-8: #fff9d6;
+  --el-color-primary-light-9: #fffceb;
+  --el-color-primary-dark-2: #e6c43d;
+  
+  background-color: var(--xy-bg);
+  color: var(--xy-text-main);
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background-color: var(--xy-bg);
+}
+
+#app {
+  width: 100%;
+  margin: 0 auto;
+  text-align: left; /* 重置默认的 center */
+}
+
+/* 全局覆盖 Element Plus 按钮样式，黄色背景配黑色文字 */
+.el-button--primary {
+  --el-button-text-color: #333333;
+  --el-button-hover-text-color: #333333;
+  --el-button-bg-color: var(--xy-primary);
+  --el-button-border-color: var(--xy-primary);
+  --el-button-hover-bg-color: var(--xy-primary-hover);
+  --el-button-hover-border-color: var(--xy-primary-hover);
+  --el-button-active-bg-color: #dcb336;
+  --el-button-active-border-color: #dcb336;
+  font-weight: 600; /* 加粗文字 */
+}
+
+/* 卡片通用样式 */
+.xy-card {
+  border-radius: 12px;
+  border: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
+  background: #ffffff;
+  transition: all 0.3s ease;
+}
+
+.xy-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08) !important;
+}
+
+/* 链接样式 */
+a {
+  color: var(--xy-text-main);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+a:hover {
+  color: #ffda44; /* 悬停变黄 */
+}

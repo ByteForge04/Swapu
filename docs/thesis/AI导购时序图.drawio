@@ -1,0 +1,120 @@
+<mxfile host="app.diagrams.net" version="21.0">
+  <diagram name="AI导购时序图" id="rag-seq">
+    <mxGraphModel dx="1100" dy="700" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="700" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- ===== 参与者头部 ===== -->
+        <mxCell id="h1" value="ChatController" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;fontStyle=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="60" y="30" width="140" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="h2" value="RagService" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;fontStyle=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="310" y="30" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="h3" value="PgVector" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;fontStyle=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="550" y="30" width="100" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="h4" value="DeepSeek Chat" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;fontStyle=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="770" y="30" width="140" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- ===== 生命线 ===== -->
+        <mxCell id="l1" style="endArrow=none;dashed=1;html=1;strokeWidth=1;strokeColor=#6c8ebf;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="130" y="70" as="sourcePoint" />
+            <mxPoint x="130" y="620" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="l2" style="endArrow=none;dashed=1;html=1;strokeWidth=1;strokeColor=#82b366;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="370" y="70" as="sourcePoint" />
+            <mxPoint x="370" y="620" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="l3" style="endArrow=none;dashed=1;html=1;strokeWidth=1;strokeColor=#d6b656;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="600" y="70" as="sourcePoint" />
+            <mxPoint x="600" y="620" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="l4" style="endArrow=none;dashed=1;html=1;strokeWidth=1;strokeColor=#9673a6;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="840" y="70" as="sourcePoint" />
+            <mxPoint x="840" y="620" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- ===== 消息 ===== -->
+
+        <!-- 1. ChatController → RagService -->
+        <mxCell id="m1" value="1. retrieveRelevantItemDetails(query, topK=3)" style="html=1;align=left;verticalAlign=bottom;endArrow=block;endFill=1;curved=0;rounded=0;fontSize=11;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="130" y="120" as="sourcePoint" />
+            <mxPoint x="370" y="120" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- 2. RagService → PgVector -->
+        <mxCell id="m2" value="2. similaritySearch(threshold=0.0)" style="html=1;align=left;verticalAlign=bottom;endArrow=block;endFill=1;curved=0;rounded=0;fontSize=11;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="370" y="190" as="sourcePoint" />
+            <mxPoint x="600" y="190" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- 3. PgVector → RagService (返回) -->
+        <mxCell id="m3" value="3. Top3 商品文档 + 元数据" style="html=1;align=left;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;fontSize=11;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="600" y="260" as="sourcePoint" />
+            <mxPoint x="370" y="260" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- 4. RagService → ChatController (返回) -->
+        <mxCell id="m4" value="4. List[itemId, title, price, description]" style="html=1;align=left;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;fontSize=11;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="370" y="330" as="sourcePoint" />
+            <mxPoint x="130" y="330" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- 5. Note: System Prompt 拼接 -->
+        <mxCell id="note1" value="System Prompt 拼接&#xa;注入 Top3 商品 + 截取最近 6 条历史" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;size=15;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;align=left;spacingLeft=5;" vertex="1" parent="1">
+          <mxGeometry x="170" y="370" width="200" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="note1l" style="endArrow=none;dashed=1;html=1;strokeColor=#6c8ebf;" edge="1" parent="1" source="note1" target="l1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- 6. ChatController → DeepSeek -->
+        <mxCell id="m5" value="5. chatClient.call(Prompt)" style="html=1;align=left;verticalAlign=bottom;endArrow=block;endFill=1;curved=0;rounded=0;fontSize=11;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="130" y="460" as="sourcePoint" />
+            <mxPoint x="840" y="460" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- 7. DeepSeek → ChatController (返回) -->
+        <mxCell id="m6" value="6. AI 推荐文本" style="html=1;align=left;verticalAlign=bottom;endArrow=open;dashed=1;curved=0;rounded=0;fontSize=11;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="840" y="520" as="sourcePoint" />
+            <mxPoint x="130" y="520" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+
+        <!-- 8. ChatController 自操作 -->
+        <mxCell id="m7" value="7. 封装 { text, items }" style="html=1;align=left;verticalAlign=bottom;endArrow=block;endFill=1;curved=0;rounded=0;fontSize=11;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="130" y="560" as="sourcePoint" />
+            <mxPoint x="130" y="600" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="80" y="580" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -1,0 +1,4 @@
+$ mysql -u root -p*** swapu -e "SELECT user_id, username, phone FROM user LIMIT 5"
+
+'mysql' is not recognized as an internal or external command,
+operable program or batch file.

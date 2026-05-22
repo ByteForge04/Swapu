@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" modified="2026-05-17T23:57:03.784674" agent="SwapU" version="24.0.0" type="device">
+  <diagram name="订单状态机" id="order-fsm">
+    <mxGraphModel dx="1422" dy="794" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1000" pageHeight="700" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="2" value="" style="ellipse;whiteSpace=wrap;html=1;fillColor=#333333;strokeColor=#333333;" vertex="1" parent="1">
+  <mxGeometry x="505" y="65" width="30" height="30" as="geometry"/>
+</mxCell><mxCell id="3" value="&lt;b&gt;待卖家确认&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=14;fontFamily=Courier New;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+  <mxGeometry x="430" y="140" width="180" height="55" as="geometry"/>
+</mxCell><mxCell id="4" value="&lt;b&gt;进行中&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=14;fontFamily=Courier New;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+  <mxGeometry x="430" y="320" width="180" height="55" as="geometry"/>
+</mxCell><mxCell id="5" value="&lt;b&gt;已完成&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=14;fontFamily=Courier New;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+  <mxGeometry x="310" y="480" width="160" height="55" as="geometry"/>
+</mxCell><mxCell id="6" value="&lt;b&gt;已取消&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=14;fontFamily=Courier New;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+  <mxGeometry x="550" y="480" width="160" height="55" as="geometry"/>
+</mxCell><mxCell id="7" value="" style="ellipse;whiteSpace=wrap;html=1;fillColor=#333333;strokeColor=#333333;" vertex="1" parent="1">
+  <mxGeometry x="380" y="570" width="20" height="20" as="geometry"/>
+</mxCell><mxCell id="8" value="" style="ellipse;whiteSpace=wrap;html=1;fillColor=#333333;strokeColor=#333333;" vertex="1" parent="1">
+  <mxGeometry x="620" y="570" width="20" height="20" as="geometry"/>
+</mxCell><mxCell id="9" value="&lt;b&gt;status = 0&lt;/b&gt;&lt;br&gt;payment_status = 0&lt;br&gt;&lt;br&gt;分布式锁保护" style="shape=note;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;fontFamily=Courier New;align=left;spacingLeft=8;" vertex="1" parent="1">
+  <mxGeometry x="680" y="135" width="160" height="70" as="geometry"/>
+</mxCell><mxCell id="10" value="&lt;b&gt;status = 1&lt;/b&gt;&lt;br&gt;payment_status = 1" style="shape=note;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;fontFamily=Courier New;align=left;spacingLeft=8;" vertex="1" parent="1">
+  <mxGeometry x="680" y="315" width="160" height="50" as="geometry"/>
+</mxCell><mxCell id="11" value="&lt;b&gt;status = 2&lt;/b&gt;&lt;br&gt;&lt;br&gt;可进行评价" style="shape=note;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;fontFamily=Courier New;align=left;spacingLeft=8;" vertex="1" parent="1">
+  <mxGeometry x="520" y="490" width="140" height="55" as="geometry"/>
+</mxCell><mxCell id="12" value="&lt;b&gt;status = 3&lt;/b&gt;&lt;br&gt;&lt;br&gt;商品释放回在售" style="shape=note;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;fontFamily=Courier New;align=left;spacingLeft=8;" vertex="1" parent="1">
+  <mxGeometry x="750" y="490" width="140" height="55" as="geometry"/>
+</mxCell><mxCell id="13" value="买家创建订单&lt;br&gt;商品 → 交易中" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#555555;fontSize=12;fontFamily=Courier New;" edge="1" parent="1" source="2" target="3">
+  <mxGeometry relative="1" as="geometry"/>
+</mxCell><mxCell id="14" value="卖家确认接单" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#555555;fontSize=12;fontFamily=Courier New;exitY=0.3;entryY=0.3;" edge="1" parent="1" source="3" target="4">
+  <mxGeometry relative="1" as="geometry"/>
+</mxCell><mxCell id="15" value="买家支付成功" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#555555;fontSize=12;fontFamily=Courier New;exitY=0.7;entryY=0.7;" edge="1" parent="1" source="3" target="4">
+  <mxGeometry relative="1" as="geometry"/>
+</mxCell><mxCell id="16" value="30分钟超时未支付" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#555555;fontSize=12;fontFamily=Courier New;exitY=0.3;entryY=0.3;" edge="1" parent="1" source="3" target="6">
+  <mxGeometry relative="1" as="geometry"/>
+</mxCell><mxCell id="17" value="买家主动取消" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#555555;fontSize=12;fontFamily=Courier New;exitY=0.7;entryY=0.7;" edge="1" parent="1" source="3" target="6">
+  <mxGeometry relative="1" as="geometry"/>
+</mxCell><mxCell id="18" value="任一方取消订单&lt;br&gt;商品 → 回滚在售" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#555555;fontSize=12;fontFamily=Courier New;" edge="1" parent="1" source="4" target="6">
+  <mxGeometry relative="1" as="geometry"/>
+</mxCell><mxCell id="19" value="买家确认收货&lt;br&gt;商品 → 已售出" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#555555;fontSize=12;fontFamily=Courier New;" edge="1" parent="1" source="4" target="5">
+  <mxGeometry relative="1" as="geometry"/>
+</mxCell><mxCell id="20" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#555555;fontSize=12;fontFamily=Courier New;" edge="1" parent="1" source="5" target="7">
+  <mxGeometry relative="1" as="geometry"/>
+</mxCell><mxCell id="21" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#555555;fontSize=12;fontFamily=Courier New;" edge="1" parent="1" source="6" target="8">
+  <mxGeometry relative="1" as="geometry"/>
+</mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

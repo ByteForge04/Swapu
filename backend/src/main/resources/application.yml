@@ -1,0 +1,108 @@
+server:
+  port: 8080
+
+spring:
+  ai:
+    openai:
+      api-key: ${DEEPSEEK_API_KEY:your-api-key-here}
+      base-url: https://api.deepseek.com
+      chat:
+        options:
+          model: deepseek-chat
+          temperature: 0.1
+    ollama:
+      base-url: http://localhost:11434
+      embedding:
+        options:
+          model: bge-m3:latest
+    vectorstore:
+      pgvector:
+        index-type: HNSW
+        distance-type: COSINE_DISTANCE
+        dimensions: 1024
+        initialize-schema: true
+  application:
+    name: swapu-backend
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/swapu?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
+    username: root
+    password: ${MYSQL_PASSWORD:your-password-here}
+    
+  # PgVector 数据库连接 (专门用于向量存储)
+  # 注意：在 Spring AI 中，pgvector 需要单独配 jdbc 或者复用 spring.datasource。
+  # 这里为了不影响原本的 MySQL，我们配置专用的 jdbc 给 jdbc-template/pgvector
+  # 但是由于 Spring Boot 默认只有单数据源，我们最简单的做法是配置第二个数据源
+  # 不过 Spring AI pgvector starter 默认读取 spring.datasource
+  # 所以更好的做法是通过 JdbcTemplate 覆盖或者直接把 pgvector 当成单独配置。
+  # 这里为了简便，我们在代码里单独构建 PgVectorStore。不过我们先把属性配在这里。
+  pgvector:
+    datasource:
+      url: jdbc:postgresql://${DB_HOST:192.168.74.128}:5432/postgres
+      username: ${DB_USER:liuyaojie}
+      password: ${DB_PASS:your-password-here}
+      driver-class-name: org.postgresql.Driver
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+  data:
+    redis:
+      host: ${REDIS_HOST:192.168.74.128}
+      port: ${REDIS_PORT:6379}
+      # password: 
+      database: 0
+      lettuce:
+        pool:
+          max-active: 8
+          max-wait: -1ms
+          max-idle: 8
+          min-idle: 0
+  elasticsearch:
+    uris: http://${ES_HOST:192.168.74.128}:${ES_PORT:9200}
+    connection-timeout: 5s
+    socket-timeout: 3s
+
+rocketmq:
+  name-server: ${ROCKMQ_HOST:192.168.74.128}:9876
+  producer:
+    group: swapu-producer-group
+    send-message-timeout: 3000
+
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/**/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+
+# 自定义配置
+file:
+  upload-path: D:/SwapU/uploads/
+
+# 日志配置
+logging:
+  level:
+    com.swapu: info
+    com.swapu.utils.DeepSeekUtils: debug
+    org.springframework.ai: trace
+    org.springframework.ai.chat.client.advisor: debug
+    org.springframework.ai.chat.model: debug
+
+# 支付宝沙箱配置
+alipay:
+  # 请替换为您自己的沙箱 AppID
+  appId: ${ALIPAY_APP_ID:your-app-id-here}
+  merchantPrivateKey: ${ALIPAY_MERCHANT_PRIVATE_KEY:your-merchant-private-key-here}
+  alipayPublicKey: ${ALIPAY_PUBLIC_KEY:your-alipay-public-key-here}
+  notifyUrl:  ${ALIPAY_NOTIFY_URL:http://localhost:8080/pay/notify}
+  returnUrl:   ${ALIPAY_RETURN_URL:http://localhost:8080/pay/return}
+  gatewayUrl: https://openapi-sandbox.dl.alipaydev.com/gateway.do
+
+# Spring AI 配置 (使用 DeepSeek 兼容 OpenAI 格式)
+
+
+# 前端访问地址
+frontend:
+  url: http://localhost:3001
