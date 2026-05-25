@@ -33,8 +33,8 @@
               
               <!-- 渲染推荐商品卡片 -->
               <div v-if="msg.items && msg.items.length > 0" class="recommend-items-container">
-                <div 
-                  v-for="(item, idx) in msg.items" 
+                <div
+                  v-for="(item, idx) in msg.items"
                   :key="idx" 
                   class="recommend-item-card"
                   @click="$router.push(`/item/${item.itemId}`)"

@@ -1,6 +1,7 @@
 package com.swapu.service.impl;
 
 import com.swapu.entity.Item;
+import com.swapu.mapper.ItemMapper;
 import com.swapu.service.RagService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,6 +23,9 @@ public class RagServiceImpl implements RagService {
 
     @Autowired
     private VectorStore vectorStore;
+
+    @Autowired
+    private ItemMapper itemMapper;
 
     @Override
     public void addDocument(Item item) {
@@ -74,7 +79,37 @@ public class RagServiceImpl implements RagService {
             );
             
             log.info("【RAG 服务】检索完成，底层共匹配到 {} 条向量文档", documents.size());
+            if (documents.isEmpty()) {
+                return List.of();
+            }
+
+            Set<Long> availableItemIds = itemMapper.selectBatchIds(
+                    documents.stream()
+                            .map(doc -> doc.getMetadata().get("itemId"))
+                            .filter(java.util.Objects::nonNull)
+                            .map(id -> {
+                                if (id instanceof Number number) {
+                                    return number.longValue();
+                                }
+                                return Long.parseLong(String.valueOf(id));
+                            })
+                            .collect(Collectors.toSet())
+            ).stream()
+                    .filter(item -> item != null && item.getStatus() != null && item.getStatus() == 1)
+                    .map(Item::getItemId)
+                    .collect(Collectors.toSet());
+
             return documents.stream()
+                    .filter(doc -> {
+                        Object itemId = doc.getMetadata().get("itemId");
+                        if (itemId == null) {
+                            return false;
+                        }
+                        Long normalizedItemId = itemId instanceof Number number
+                                ? number.longValue()
+                                : Long.parseLong(String.valueOf(itemId));
+                        return availableItemIds.contains(normalizedItemId);
+                    })
                     .map(doc -> {
                         Map<String, Object> metadata = doc.getMetadata();
                         // 创建一个新的 Map 来包含 content 和 metadata，方便前端渲染卡片

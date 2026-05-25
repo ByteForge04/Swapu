@@ -2,6 +2,7 @@ package com.swapu.controller;
 
 import com.swapu.common.Result;
 import com.swapu.service.RagService;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ai.chat.ChatClient;
@@ -13,9 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import reactor.core.publisher.Flux;
+import java.util.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.List;
@@ -84,7 +83,7 @@ public class ChatController {
         try {
             log.info("【AI 助手】步骤 1: 开始在 PgVector 中进行 RAG 向量检索...");
             // 1. 先通过 RAG 从向量数据库检索可能相关的商品 (Top 3)，获取包含元数据的完整详情
-            List<Map<String, Object>> relevantItemDetails = ragService.retrieveRelevantItemDetails(userMessage, 3);
+            List<Map<String, Object>> relevantItemDetails = ragService.retrieveRelevantItemDetails(userMessage, 10);
             log.info("【AI 助手】步骤 1 完成: 共检索到 {} 条相关商品数据。", relevantItemDetails.size());
             
             // 2. 构建系统提示词，注入 RAG 上下文
@@ -99,12 +98,16 @@ public class ChatController {
                 systemPromptBuilder.append("【相关商品上下文开始】\n");
                 for (int i = 0; i < relevantItemDetails.size(); i++) {
                     Map<String, Object> item = relevantItemDetails.get(i);
-                    systemPromptBuilder.append(i + 1).append(". 标题: ").append(item.get("title"))
+                    systemPromptBuilder.append(i + 1).append(". [itemId: ").append(item.get("itemId"))
+                                       .append("] 标题: ").append(item.get("title"))
                                        .append(", 价格: ").append(item.get("price"))
                                        .append(", 描述: ").append(item.get("description")).append("\n");
                 }
                 systemPromptBuilder.append("【相关商品上下文结束】\n");
-                systemPromptBuilder.append("请使用友好、热情的语气回答，简明扼要地引导用户查看下面展示的商品卡片。不要在文本里输出长篇大论的商品详情。\n");
+                systemPromptBuilder.append("请根据用户的问题，从中挑选真正相关的商品进行推荐。如果这些商品都与用户问题无关，请不要推荐任何商品。\n");
+                systemPromptBuilder.append("你必须在回复的最末尾，用 <<<JSON>>> 和 <<<END>>> 标记包裹一个 JSON 块，格式如下：\n");
+                systemPromptBuilder.append("<<<JSON>>>{\"text\": \"你的回复内容\", \"recommendIds\": [商品id1, 商品id2]}<<<END>>>\n");
+                systemPromptBuilder.append("其中 recommendIds 是你认为值得推荐的商品 itemId 数组。如果不需要推荐任何商品，返回空数组：\"recommendIds\": []\n");
             } else {
                 log.info("【AI 助手】步骤 2.1: 未发现相关商品，跳过上下文注入。");
             }
@@ -137,11 +140,46 @@ public class ChatController {
             String aiResponse = chatClient.call(prompt).getResult().getOutput().getContent();
             log.info("【AI 助手】步骤 4 完成: DeepSeek 返回成功。响应长度: {} 字符", aiResponse.length());
             log.debug("【AI 助手】大模型返回内容: {}", aiResponse);
-            
-            // 4. 将 AI 的文本回复和关联的商品卡片数据一起返回给前端
+
+            // 5. 解析 LLM 返回的 JSON，提取推荐商品 ID
+            String responseText = aiResponse;
+            List<Map<String, Object>> filteredItems = List.of();
+            try {
+                int jsonStart = aiResponse.indexOf("<<<JSON>>>");
+                int jsonEnd = aiResponse.indexOf("<<<END>>>");
+                if (jsonStart != -1 && jsonEnd != -1 && jsonEnd > jsonStart) {
+                    String jsonStr = aiResponse.substring(jsonStart + 10, jsonEnd).trim();
+                    log.info("【AI 助手】步骤 5: 解析 LLM 返回的 JSON: {}", jsonStr);
+                    ObjectMapper mapper = new ObjectMapper();
+                    Map<String, Object> parsed = mapper.readValue(jsonStr, Map.class);
+                    responseText = (String) parsed.get("text");
+                    List<?> recommendIds = (List<?>) parsed.get("recommendIds");
+                    if (recommendIds != null && !recommendIds.isEmpty()) {
+                        java.util.Set<Long> idSet = recommendIds.stream()
+                                .map(id -> id instanceof Number ? ((Number) id).longValue() : Long.parseLong(String.valueOf(id)))
+                                .collect(Collectors.toSet());
+                        filteredItems = relevantItemDetails.stream()
+                                .filter(item -> {
+                                    Object itemId = item.get("itemId");
+                                    if (itemId == null) return false;
+                                    Long id = itemId instanceof Number ? ((Number) itemId).longValue() : Long.parseLong(String.valueOf(itemId));
+                                    return idSet.contains(id);
+                                })
+                                .collect(Collectors.toList());
+                    }
+                    log.info("【AI 助手】步骤 5 完成: LLM 推荐了 {} 个商品", filteredItems.size());
+                } else {
+                    log.info("【AI 助手】步骤 5: LLM 未返回 JSON 标记，跳过商品过滤");
+                }
+            } catch (Exception e) {
+                log.warn("【AI 助手】步骤 5: 解析 LLM JSON 失败，降级处理", e);
+                responseText = aiResponse.replaceAll("<<<JSON>>>.*?<<<END>>>", "").trim();
+            }
+
+            // 6. 返回给前端
             Map<String, Object> responseData = new java.util.HashMap<>();
-            responseData.put("text", aiResponse);
-            responseData.put("items", relevantItemDetails);
+            responseData.put("text", responseText);
+            responseData.put("items", filteredItems);
             
             log.info("【AI 助手】全流程结束，准备返回结果给前端。");
             return Result.success(responseData);
