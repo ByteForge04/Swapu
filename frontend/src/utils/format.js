@@ -33,3 +33,8 @@ export const getStatusText = (orderOrStatus) => {
   }
   return statusMap[status] || '未知状态'
 }
+
+export const canBuyerCompleteOrder = (order) => {
+  if (!order) return false
+  return order.status === 1
+}

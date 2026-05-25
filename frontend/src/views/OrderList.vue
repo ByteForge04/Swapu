@@ -51,7 +51,7 @@
                       @click.stop="handleCancel(order)"
                     >取消订单</el-button>
                     <el-button 
-                      v-if="order.status === 1 && order.paymentMethod !== 2" 
+                      v-if="canBuyerCompleteOrder(order)" 
                       type="success" 
                       size="small" 
                       @click.stop="handleComplete(order)"
@@ -149,7 +149,7 @@
 </template>
 
 <script setup>
-import { getCoverImage as getItemCover, formatTime, getStatusText } from '@/utils/format'
+import { canBuyerCompleteOrder, getCoverImage as getItemCover, formatTime, getStatusText } from '@/utils/format'
 import { ref, reactive, onMounted, defineProps } from 'vue'
 import { useRouter } from 'vue-router'
 import { ArrowLeft } from '@element-plus/icons-vue'

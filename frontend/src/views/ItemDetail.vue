@@ -250,7 +250,7 @@
             <el-radio :label="2">线下自行交易</el-radio>
           </el-radio-group>
           <div class="payment-tip" v-if="buyForm.paymentMethod === 2">
-            提示：选择线下交易时，订单将在卖家确认后直接完成，平台不担保资金安全，请当面检查物品。
+            提示：选择线下交易时，卖家确认后订单会进入交易中，买家确认完成后结束交易，平台不担保资金安全，请当面检查物品。
           </div>
         </el-form-item>
         <el-form-item label="买家留言">

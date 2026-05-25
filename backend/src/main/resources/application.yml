@@ -2,6 +2,8 @@ server:
   port: 8080
 
 spring:
+  profiles:
+    active: dev
   ai:
     openai:
       api-key: ${DEEPSEEK_API_KEY:your-api-key-here}
@@ -80,6 +82,10 @@ mybatis-plus:
 # 自定义配置
 file:
   upload-path: D:/SwapU/uploads/
+
+swapu:
+  aes-secret-key: ${AES_SECRET_KEY:ChangeMe123456789}
+  jwt-secret-key: ${JWT_SECRET_KEY:ChangeMe_ChangeMe_ChangeMe_ChangeMe_ChangeMe_ChangeMe}
 
 # 日志配置
 logging:

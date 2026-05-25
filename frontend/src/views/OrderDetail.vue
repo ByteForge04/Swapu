@@ -83,7 +83,7 @@
               </el-button>
               <el-button 
                 type="success" 
-                v-if="order.status === 1 && order.paymentMethod !== 2" 
+                v-if="canBuyerCompleteOrder(order)" 
                 @click="completeOrder"
               >
                 确认收货
@@ -109,7 +109,7 @@
 </template>
 
 <script setup>
-import { formatTime } from '@/utils/format'
+import { canBuyerCompleteOrder, formatTime } from '@/utils/format'
 import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { InfoFilled, ArrowLeft } from '@element-plus/icons-vue'

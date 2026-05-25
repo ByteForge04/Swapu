@@ -18,6 +18,7 @@ Thumbs.db
 
 # Environment & Secrets
 backend/src/main/resources/application-prod.yml
+backend/src/main/resources/application-dev.yml
 .mcp.json
 
 # Python cache
